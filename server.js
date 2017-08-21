@@ -92,35 +92,56 @@ app.get('/pagecount', function (req, res) {
 });
 
 app.get('/sendRequest', function(req, res){
-  
-  jQuery.ajax({
-    url: "https://fcm.googleapis.com/fcm/send",
-    type: "POST",
-    headers: {
-        "Authorization": "key=AAAAytSRQzM:APA91bFSXvRwvg63rfS4DlNBS8O3FPjEh3GJZulKZ2KFwg1je5f9cUmsDFq1sw0O_BJhTz5Eszc83BOd0x9eKAcZb8DifFH3p9eu48im-OPzd1PYMyBuEmljenlQvzjMXs0XiEwIRLKs",
-        "Content-Type": "application/json",
-    },
-    contentType: "application/json",
-    data: JSON.stringify({
-        "to": "aUniqueKey",
-        "data": {
-            "hello": "This is a Firebase Cloud Messaging Device Group Message!"
-        }
+        
+    const httpTransport = require('https');
+    const responseEncoding = 'utf8';
+    const httpOptions = {
+        hostname: 'fcm.googleapis.com',
+        port: '443',
+        path: '/fcm/send',
+        method: 'POST',
+        headers: {"Authorization":"key=AAAAytSRQzM:APA91bFSXvRwvg63rfS4DlNBS8O3FPjEh3GJZulKZ2KFwg1je5f9cUmsDFq1sw0O_BJhTz5Eszc83BOd0x9eKAcZb8DifFH3p9eu48im-OPzd1PYMyBuEmljenlQvzjMXs0XiEwIRLKs","Content-Type":"application/json"}
+    };
+    httpOptions.headers['User-Agent'] = 'node ' + process.version;
+ 
+
+    const request = httpTransport.request(httpOptions, (res) => {
+        let responseBufs = [];
+        let responseStr = '';
+        
+        res.on('data', (chunk) => {
+            if (Buffer.isBuffer(chunk)) {
+                responseBufs.push(chunk);
+            }
+            else {
+                responseStr = responseStr + chunk;            
+            }
+        }).on('end', () => {
+            responseStr = responseBufs.length > 0 ? 
+                Buffer.concat(responseBufs).toString(responseEncoding) : responseStr;
+            
+            callback(null, res.statusCode, res.headers, responseStr);
+        });
+        
     })
-})
-.done(function(data, textStatus, jqXHR) {
-    console.log("HTTP Request Succeeded: " + jqXHR.status);
-    console.log(data);
-    res.send(data);
-})
-.fail(function(jqXHR, textStatus, errorThrown) {
-    console.log("HTTP Request Failed");
-})
-.always(function() {
-    /* ... */
+    .setTimeout(0)
+    .on('error', (error) => {
+        callback(error);
+    });
+    request.write("{\"to\":\"aUniqueKey\",\"data\":{\"hello\":\"This is a Firebase Cloud Messaging Device Group Message!\"}}")
+    request.end();
+    
+
+})((error, statusCode, headers, body) => {
+    console.log('ERROR:', error); 
+    console.log('STATUS:', statusCode);
+    console.log('HEADERS:', JSON.stringify(headers));
+    console.log('BODY:', body);
+    res.send(JSON.stringify(headers))
 });
 
-});
+
+
 
 
 function post(path, params, method) {
