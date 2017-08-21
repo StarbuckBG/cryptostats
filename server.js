@@ -139,7 +139,7 @@ app.get('/sendRequest', function(req, res){
     .on('error', (error) => {
         callback(error);
     });
-    request.write("{\"to\":\"aUniqueKey\",\"data\":{\"hello\":\"This is a Firebase Cloud Messaging Device Group Message!\"}}")
+    request.write("{\"to\":\"/topics/all\",\"data\":{\"hello\":\"This is a Firebase Cloud Messaging Device Group Message!\"}}")
     request.end();
     
 
@@ -148,7 +148,7 @@ app.get('/sendRequest', function(req, res){
     console.log('STATUS:', statusCode);
     console.log('HEADERS:', JSON.stringify(headers));
     console.log('BODY:', body);
-    res("sent");
+    res.send(JSON.stringify(headers));
 });
 
 
