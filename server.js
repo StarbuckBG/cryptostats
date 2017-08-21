@@ -92,7 +92,7 @@ app.get('/pagecount', function (req, res) {
 });
 
 app.get('/sendRequest', function(req, res){
-  res.send("success")
+  res.send("success");
 });
 
 // error handling
