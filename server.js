@@ -91,7 +91,17 @@ app.get('/pagecount', function (req, res) {
   }
 });
 
+
+
+
+
+
+
 app.get('/sendRequest', function(req, res){
+
+
+  (function(callback) {
+    'use strict';
         
     const httpTransport = require('https');
     const responseEncoding = 'utf8';
@@ -137,7 +147,11 @@ app.get('/sendRequest', function(req, res){
     console.log('STATUS:', statusCode);
     console.log('HEADERS:', JSON.stringify(headers));
     console.log('BODY:', body);
-    res.send(JSON.stringify(headers));
+    res(JSON.stringify(headers))
+});
+
+
+
 });
 
 
