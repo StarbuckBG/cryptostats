@@ -92,9 +92,33 @@ app.get('/pagecount', function (req, res) {
 });
 
 app.get('/sendRequest', function(req, res){
-  res.send("success");
-  let address = "https://fcm.googleapis.com/fcm/send"
-  post(address, {to:'aUniqueKey', data:{hello:"Message"}});
+  
+  jQuery.ajax({
+    url: "https://fcm.googleapis.com/fcm/send",
+    type: "POST",
+    headers: {
+        "Authorization": "key=AAAAytSRQzM:APA91bFSXvRwvg63rfS4DlNBS8O3FPjEh3GJZulKZ2KFwg1je5f9cUmsDFq1sw0O_BJhTz5Eszc83BOd0x9eKAcZb8DifFH3p9eu48im-OPzd1PYMyBuEmljenlQvzjMXs0XiEwIRLKs",
+        "Content-Type": "application/json",
+    },
+    contentType: "application/json",
+    data: JSON.stringify({
+        "to": "aUniqueKey",
+        "data": {
+            "hello": "This is a Firebase Cloud Messaging Device Group Message!"
+        }
+    })
+})
+.done(function(data, textStatus, jqXHR) {
+    console.log("HTTP Request Succeeded: " + jqXHR.status);
+    console.log(data);
+    res.send(textStatus);
+})
+.fail(function(jqXHR, textStatus, errorThrown) {
+    console.log("HTTP Request Failed");
+})
+.always(function() {
+    /* ... */
+});
 
 });
 
