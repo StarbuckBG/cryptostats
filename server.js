@@ -147,7 +147,7 @@ app.get('/sendRequest', function(req, res){
     console.log('STATUS:', statusCode);
     console.log('HEADERS:', JSON.stringify(headers));
     console.log('BODY:', body);
-    res("sent")
+    res("sent");
 });
 
 
