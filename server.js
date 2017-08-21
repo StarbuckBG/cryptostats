@@ -4,6 +4,7 @@ var express = require('express'),
     app     = express(),
     eps     = require('ejs'),
     morgan  = require('morgan');
+    request = require('request')
     
 Object.assign=require('object-assign')
 
