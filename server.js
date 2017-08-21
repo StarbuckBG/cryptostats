@@ -111,7 +111,7 @@ app.get('/sendRequest', function(req, res){
 .done(function(data, textStatus, jqXHR) {
     console.log("HTTP Request Succeeded: " + jqXHR.status);
     console.log(data);
-    res.send(textStatus);
+    res.send(data);
 })
 .fail(function(jqXHR, textStatus, errorThrown) {
     console.log("HTTP Request Failed");
